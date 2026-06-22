@@ -18,6 +18,7 @@ package com.example.chatapp.wear.uicomponents
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -25,9 +26,11 @@ import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material3.Button
 import androidx.wear.compose.material3.ListHeader
+import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.TitleCard
 import com.example.chatapp.ChatViewModel
+import com.example.chatapp.util.linkifyString
 
 @Composable
 fun WearChatScreen(
@@ -66,7 +69,11 @@ fun WearChatScreen(
                 onClick = { },
                 title = { Text(text = if (message.isInbound) message.senderName ?: "Sender" else "Me") },
             ) {
-                Text(text = message.content)
+                val linkColor = MaterialTheme.colorScheme.primary
+                val annotatedText = remember(message.content, linkColor) {
+                    linkifyString(text = message.content, linkColor = linkColor)
+                }
+                Text(text = annotatedText)
             }
         }
     }

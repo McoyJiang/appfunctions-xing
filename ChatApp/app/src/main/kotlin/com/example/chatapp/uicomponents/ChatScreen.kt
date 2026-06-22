@@ -51,6 +51,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -68,6 +69,7 @@ import com.example.chatapp.ChatViewModel
 import com.example.chatapp.InputBar
 import com.example.chatapp.R
 import com.example.chatapp.data.DisplayMessage
+import com.example.chatapp.util.linkifyString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -267,9 +269,17 @@ fun MessageBubble(
                     }
                 }
                 if (message.content.isNotEmpty()) {
+                    val linkColor = if (message.isInbound) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.inversePrimary
+                    }
+                    val annotatedText = remember(message.content, linkColor) {
+                        linkifyString(message.content, linkColor = linkColor)
+                    }
                     Text(
                         modifier = Modifier.padding(16.dp),
-                        text = message.content,
+                        text = annotatedText,
                     )
                 }
             }
