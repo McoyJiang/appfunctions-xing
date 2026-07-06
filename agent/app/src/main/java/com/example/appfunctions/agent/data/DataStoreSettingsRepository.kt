@@ -35,6 +35,8 @@ class DataStoreSettingsRepository
         // TODO: Make sure the API keys are not leaked in the I/O event.
         private object PreferencesKeys {
             val GEMINI_API_KEY = stringPreferencesKey("gemini_api_key")
+            val OPENAI_COMPATIBLE_API_KEY = stringPreferencesKey("openai_compatible_api_key")
+            val OPENAI_COMPATIBLE_BASE_URL = stringPreferencesKey("openai_compatible_base_url")
             val SELECTED_PROVIDER = stringPreferencesKey("selected_provider")
             val PINNED_APPS = stringSetPreferencesKey("pinned_apps")
             val DISCONNECTED_APPS = stringSetPreferencesKey("disconnected_apps")
@@ -47,14 +49,30 @@ class DataStoreSettingsRepository
                 dataStore.data.map { preferences -> preferences[PreferencesKeys.GEMINI_API_KEY] }
             }
 
+        override val openAiCompatibleApiKey: Flow<String?> =
+            if (BuildConfig.IS_RETAIL) {
+                flowOf(BuildConfig.OPENAI_COMPATIBLE_API_KEY)
+            } else {
+                dataStore.data.map { preferences ->
+                    preferences[PreferencesKeys.OPENAI_COMPATIBLE_API_KEY]
+                }
+            }
+
+        override val openAiCompatibleBaseUrl: Flow<String> =
+            dataStore.data.map { preferences ->
+                preferences[PreferencesKeys.OPENAI_COMPATIBLE_BASE_URL]
+                    ?: DEFAULT_OPENAI_COMPATIBLE_BASE_URL
+            }
+
         override val selectedProvider: Flow<LlmProviderName> =
             dataStore.data.map { preferences ->
                 preferences[PreferencesKeys.SELECTED_PROVIDER]?.let { storedValue ->
                     when (storedValue.uppercase()) {
                         "GEMINI" -> LlmProviderName.GEMINI
-                        else -> LlmProviderName.GEMINI
+                        "OPEN_AI_COMPATIBLE" -> LlmProviderName.OPEN_AI_COMPATIBLE
+                        else -> LlmProviderName.OPEN_AI_COMPATIBLE
                     }
-                } ?: LlmProviderName.GEMINI
+                } ?: LlmProviderName.OPEN_AI_COMPATIBLE
             }
 
         override val pinnedApps: Flow<Set<String>> =
@@ -67,6 +85,18 @@ class DataStoreSettingsRepository
 
         override suspend fun setGeminiApiKey(apiKey: String) {
             dataStore.edit { preferences -> preferences[PreferencesKeys.GEMINI_API_KEY] = apiKey }
+        }
+
+        override suspend fun setOpenAiCompatibleApiKey(apiKey: String) {
+            dataStore.edit { preferences ->
+                preferences[PreferencesKeys.OPENAI_COMPATIBLE_API_KEY] = apiKey
+            }
+        }
+
+        override suspend fun setOpenAiCompatibleBaseUrl(baseUrl: String) {
+            dataStore.edit { preferences ->
+                preferences[PreferencesKeys.OPENAI_COMPATIBLE_BASE_URL] = baseUrl
+            }
         }
 
         override suspend fun setSelectedProvider(provider: LlmProviderName) {
@@ -105,5 +135,10 @@ class DataStoreSettingsRepository
                     }
                 preferences[PreferencesKeys.DISCONNECTED_APPS] = newDisconnected
             }
+        }
+
+        companion object {
+            private const val DEFAULT_OPENAI_COMPATIBLE_BASE_URL =
+                "https://open.bigmodel.cn/api/paas/v4"
         }
     }

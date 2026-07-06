@@ -40,6 +40,8 @@ class SettingsViewModel
         private val settingsRepository: SettingsRepository,
     ) : ViewModel() {
         val geminiApiKeyState = TextFieldState()
+        val openAiCompatibleApiKeyState = TextFieldState()
+        val openAiCompatibleBaseUrlState = TextFieldState()
 
         val uiState: StateFlow<SettingsUiState> =
             settingsRepository.selectedProvider
@@ -56,6 +58,16 @@ class SettingsViewModel
                 if (!geminiKey.isNullOrEmpty()) {
                     geminiApiKeyState.setTextAndPlaceCursorAtEnd(geminiKey)
                 }
+
+                val openAiKey = settingsRepository.openAiCompatibleApiKey.firstOrNull()
+                if (!openAiKey.isNullOrEmpty()) {
+                    openAiCompatibleApiKeyState.setTextAndPlaceCursorAtEnd(openAiKey)
+                }
+
+                val baseUrl = settingsRepository.openAiCompatibleBaseUrl.firstOrNull()
+                if (!baseUrl.isNullOrEmpty()) {
+                    openAiCompatibleBaseUrlState.setTextAndPlaceCursorAtEnd(baseUrl)
+                }
             }
         }
 
@@ -63,6 +75,12 @@ class SettingsViewModel
             viewModelScope.launch {
                 withContext(NonCancellable) {
                     settingsRepository.setGeminiApiKey(geminiApiKeyState.text.toString())
+                    settingsRepository.setOpenAiCompatibleApiKey(
+                        openAiCompatibleApiKeyState.text.toString(),
+                    )
+                    settingsRepository.setOpenAiCompatibleBaseUrl(
+                        openAiCompatibleBaseUrlState.text.toString(),
+                    )
                 }
             }
         }

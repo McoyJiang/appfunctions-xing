@@ -81,6 +81,8 @@ fun SettingsScreen(
 
     SettingsScreenContent(
         geminiApiKeyState = viewModel.geminiApiKeyState,
+        openAiCompatibleApiKeyState = viewModel.openAiCompatibleApiKeyState,
+        openAiCompatibleBaseUrlState = viewModel.openAiCompatibleBaseUrlState,
         onOpenLicenses = onOpenLicensesClick,
         onNavigateToConnectedApps = onNavigateToConnectedApps,
     )
@@ -91,6 +93,8 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreenContent(
     geminiApiKeyState: TextFieldState,
+    openAiCompatibleApiKeyState: TextFieldState,
+    openAiCompatibleBaseUrlState: TextFieldState,
     onOpenLicenses: () -> Unit,
     onNavigateToConnectedApps: () -> Unit,
 ) {
@@ -173,6 +177,72 @@ fun SettingsScreenContent(
                 }
             }
 
+            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                Text(
+                    text = stringResource(id = R.string.settings_openai_compatible_api_key),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
+
+                if (BuildConfig.IS_RETAIL) {
+                    OutlinedTextField(
+                        value = openAiCompatibleApiKeyState.text.toString(),
+                        onValueChange = {},
+                        modifier = Modifier.fillMaxWidth(),
+                        readOnly = true,
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        shape = CircleShape,
+                        colors =
+                            OutlinedTextFieldDefaults.colors(
+                                unfocusedContainerColor =
+                                    MaterialTheme.colorScheme.surfaceBright,
+                                focusedContainerColor =
+                                    MaterialTheme.colorScheme.surfaceBright,
+                            ),
+                    )
+                } else {
+                    OutlinedTextField(
+                        value = openAiCompatibleApiKeyState.text.toString(),
+                        onValueChange = { openAiCompatibleApiKeyState.setTextAndPlaceCursorAtEnd(it) },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        shape = CircleShape,
+                        colors =
+                            OutlinedTextFieldDefaults.colors(
+                                unfocusedContainerColor =
+                                    MaterialTheme.colorScheme.surfaceBright,
+                                focusedContainerColor =
+                                    MaterialTheme.colorScheme.surfaceBright,
+                            ),
+                    )
+                }
+            }
+
+            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                Text(
+                    text = stringResource(id = R.string.settings_openai_compatible_base_url),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
+
+                OutlinedTextField(
+                    value = openAiCompatibleBaseUrlState.text.toString(),
+                    onValueChange = { openAiCompatibleBaseUrlState.setTextAndPlaceCursorAtEnd(it) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    shape = CircleShape,
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            unfocusedContainerColor =
+                                MaterialTheme.colorScheme.surfaceBright,
+                            focusedContainerColor =
+                                MaterialTheme.colorScheme.surfaceBright,
+                        ),
+                )
+            }
+
             ListItem(
                 headlineContent = {
                     Text(
@@ -236,6 +306,8 @@ fun SettingsScreenContent(
 fun SettingsScreenPreview() {
     SettingsScreenContent(
         geminiApiKeyState = rememberTextFieldState("AIzaSy..."),
+        openAiCompatibleApiKeyState = rememberTextFieldState("sk-..."),
+        openAiCompatibleBaseUrlState = rememberTextFieldState("https://open.bigmodel.cn/api/paas/v4/"),
         onOpenLicenses = {},
         onNavigateToConnectedApps = {},
     )

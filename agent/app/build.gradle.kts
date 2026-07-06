@@ -39,6 +39,8 @@ android {
 
         buildConfigField("Boolean", "IS_RETAIL", "false")
         buildConfigField("String", "GEMINI_API_KEY", "\"\"")
+        buildConfigField("String", "OPENAI_COMPATIBLE_API_KEY", "\"\"")
+        buildConfigField("String", "OPENAI_COMPATIBLE_BASE_URL", "\"https://api.openai.com/v1/\"")
     }
 
     buildTypes {
@@ -68,6 +70,13 @@ android {
                 )
             }
             buildConfigField("String", "GEMINI_API_KEY", "\"$apiKey\"")
+
+            val openAiApiKey = project.findProperty("OPENAI_COMPATIBLE_API_KEY") as? String ?: ""
+            buildConfigField("String", "OPENAI_COMPATIBLE_API_KEY", "\"$openAiApiKey\"")
+            val openAiBaseUrl =
+                project.findProperty("OPENAI_COMPATIBLE_BASE_URL") as? String
+                    ?: "https://api.openai.com/v1/"
+            buildConfigField("String", "OPENAI_COMPATIBLE_BASE_URL", "\"$openAiBaseUrl\"")
         }
     }
     buildFeatures {

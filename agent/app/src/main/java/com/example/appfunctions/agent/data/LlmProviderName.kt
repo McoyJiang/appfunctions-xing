@@ -18,6 +18,7 @@ package com.example.appfunctions.agent.data
 /** Enum representing the supported LLM providers. */
 enum class LlmProviderName {
     GEMINI,
+    OPEN_AI_COMPATIBLE,
 }
 
 /** Enum representing the supported LLM models. */
@@ -25,9 +26,10 @@ enum class LlmModel private constructor(val providerName: LlmProviderName, val m
     GEMINI_3_1_PRO_PREVIEW(LlmProviderName.GEMINI, "gemini-3.1-pro-preview"),
     GEMINI_3_FLASH_PREVIEW(LlmProviderName.GEMINI, "gemini-3-flash-preview"),
     GEMINI_3_1_FLASH_LITE_PREVIEW(LlmProviderName.GEMINI, "gemini-3.1-flash-lite-preview"),
+    GLM_5_2(LlmProviderName.OPEN_AI_COMPATIBLE, "glm-5.2"),
     ;
 
     companion object {
-        val DEFAULT = GEMINI_3_FLASH_PREVIEW
+        val DEFAULT = GLM_5_2
     }
 }

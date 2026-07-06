@@ -26,10 +26,12 @@ class LlmProviderFactoryImpl
     @Inject
     constructor(
         private val geminiProvider: GeminiProviderImpl,
+        private val openAiCompatibleProvider: OpenAiCompatibleProviderImpl,
     ) : LlmProviderFactory {
         override fun getProvider(name: LlmProviderName): LlmProvider {
             return when (name) {
                 LlmProviderName.GEMINI -> geminiProvider
+                LlmProviderName.OPEN_AI_COMPATIBLE -> openAiCompatibleProvider
             }
         }
     }

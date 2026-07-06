@@ -22,11 +22,23 @@ interface SettingsRepository {
     /** Flow of the Gemini API key. */
     val geminiApiKey: Flow<String?>
 
+    /** Flow of the OpenAI-compatible API key. */
+    val openAiCompatibleApiKey: Flow<String?>
+
+    /** Flow of the OpenAI-compatible base URL. */
+    val openAiCompatibleBaseUrl: Flow<String>
+
     /** Flow of the selected LLM provider. */
     val selectedProvider: Flow<LlmProviderName>
 
     /** Sets the Gemini API key. */
     suspend fun setGeminiApiKey(apiKey: String)
+
+    /** Sets the OpenAI-compatible API key. */
+    suspend fun setOpenAiCompatibleApiKey(apiKey: String)
+
+    /** Sets the OpenAI-compatible base URL. */
+    suspend fun setOpenAiCompatibleBaseUrl(baseUrl: String)
 
     /** Sets the selected LLM provider. */
     suspend fun setSelectedProvider(provider: LlmProviderName)
