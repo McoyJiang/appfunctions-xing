@@ -139,6 +139,6 @@ class DataStoreSettingsRepository
 
         companion object {
             private const val DEFAULT_OPENAI_COMPATIBLE_BASE_URL =
-                "https://open.bigmodel.cn/api/paas/v4"
+                "https://ark.cn-beijing.volces.com/api/coding/v3"  // TODO use ByteDance LLM as default, replace this url by yourself
         }
     }
